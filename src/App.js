@@ -1,24 +1,53 @@
-import logo from './img/logo.svg';
-import './css/App.css';
+import React, { useEffect, useState } from "react";
 
 function App() {
+  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
+  const REDIRECT_URI = "http://localhost:3000"
+  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
+  const RESPONSE_TYPE = "token"
+
+  const [token, setToken] = useState("")
+
+  useEffect(() => {
+      const hash = window.location.hash
+      let token = window.localStorage.getItem("token")
+
+      if (!token && hash) {
+          token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+
+          window.location.hash = ""
+          window.localStorage.setItem("token", token)
+      }
+
+      setToken(token)
+
+  }, [])
+
+  const logout = () => {
+      setToken("")
+      window.localStorage.removeItem("token")
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+          <header className="App-header">
+            <h1>Guessify</h1>
+            <h2>Spotify Guessing Game</h2>
+
+            { !token ?
+              <div class="connect-wrapper">
+                <p>Connect your Spotify account to start playing!</p>
+                <a class="connect-btn" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Play Now</a>
+              </div>
+              :
+              <div class="playlist-wrapper">
+                <button onClick={logout}>Logout</button>
+                <p>Token: {token} </p>
+              </div> 
+            }
+              
+          </header>
+      </div>
   );
 }
 
