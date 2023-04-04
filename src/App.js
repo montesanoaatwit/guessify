@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./css/App.css"
 
 function App() {
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
@@ -32,12 +33,12 @@ function App() {
       <div className="App">
           <header className="App-header">
             <h1>Guessify</h1>
-            <h2>Spotify Guessing Game</h2>
+            <h3>Spotify Guessing Game</h3>
 
             { !token ?
               <div class="connect-wrapper">
+                <button><a class="connect-btn" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Play Now</a></button>
                 <p>Connect your Spotify account to start playing!</p>
-                <a class="connect-btn" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Play Now</a>
               </div>
               :
               <div class="playlist-wrapper">
